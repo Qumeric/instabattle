@@ -34,8 +34,8 @@ def create_app(config_name):
     from .frontend import nav
     nav.init_app(app)
 
-    app.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
-        '//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/'  # Use jquery 3.0.0
-    )
+#    app.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
+#        '//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/'  # Use jquery 3.0.0
+#    )
 
     return app

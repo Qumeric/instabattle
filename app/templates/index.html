@@ -7,4 +7,22 @@
   <h1>Instabattle</h1>
   <p>The next big thing!</p>
 </div>
+
+<figure id="pic">
+  <img src="{{ url_for('static', filename='oklahoma.jpg') }}" class="img-responsive">
+</figure>
+
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose a filter
+    <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><button onclick='$("#pic").attr("class", "");'>No filter</button></li>
+    <li><button onclick='$("#pic").attr("class", "aden");'>Aden</button></li>
+    <li><button onclick='$("#pic").attr("class", "reyes");'>Reyes</button></li>
+  </ul>
+</div>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 {% endblock %}

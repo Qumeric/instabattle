@@ -2,6 +2,8 @@
 
 {% block title %}Instabattle{% endblock %}
 
+{% block html_attribs %} lang="en" {% endblock %}
+
 {% block head %}
 {{ super() }}
 <meta charset="utf-8">
@@ -19,6 +21,11 @@
 
   {% block page_content %}{% endblock %}
 </div>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="https://cssgram-cssgram.netdna-ssl.com/cssgram.min.css">
 {% endblock %}
 
 {% block scripts %}
