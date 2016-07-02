@@ -24,3 +24,7 @@
 {% block scripts %}
 {{ super() }}
 {% endblock %}
+
+{% block navbar %}
+{{nav.frontend_top.render()}}
+{% endblock %}
