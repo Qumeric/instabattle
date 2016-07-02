@@ -9,7 +9,7 @@ class UploadForm(Form):
     submit = SubmitField("Submit")
 
     def validate_image(self, field):
-        ALLOWED_EXTENSIONS = set(['png', 'jpg'])
+        ALLOWED_EXTENSIONS = set(['png', 'jpeg'])
         if imghdr.what(None, h=field.data.read()) not in ALLOWED_EXTENSIONS:
             raise ValidationError("Currently supports only .png and .jpg")
         field.data.seek(0)

@@ -9,7 +9,7 @@
 </div>
 
 <figure id="pic">
-  <img src="{{ url_for('static', filename='oklahoma.jpg') }}" class="img-responsive">
+  <img src="" class="img-responsive">
 </figure>
 
 <div class="dropdown">
@@ -21,9 +21,10 @@
     <li><button onclick='$("#pic").attr("class", "reyes");'>Reyes</button></li>
   </ul>
 </div>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<!-- FIXME -->
+<br><!-- FIXME -->
+{% for image in images %}
+<figure id="{{ image.name }}">
+  <img src="{{ '/static/images/' + image.name }}" class="img-responsive" onclick="setImage()">
+</figure>
+{% endfor %}
 {% endblock %}

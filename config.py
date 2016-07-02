@@ -8,6 +8,7 @@ class Config:
     MAIL_PREFIX = "[Instabattle]"
     MAIL_SENDER = "Valery Che <qumidium@gmail.com>"
     ADMIN = os.environ.get('ADMIN')
+    UPLOAD_DIR = 'app/static/images' # Careful: hard-coded!
 
     @staticmethod
     def init_app(app):
@@ -23,14 +24,12 @@ class DevelopmentConfig(Config):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or \
             'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
-    UPLOAD_DIR = 'images'
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI') or \
             'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
-    UPLOAD_DIR = 'images'
 
 
 class ProductionConfig(Config):

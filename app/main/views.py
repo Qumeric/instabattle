@@ -11,7 +11,8 @@ from flask_login import current_user
 
 @main.route("/")
 def index():
-    return render_template("index.html")
+    images = Image.query.limit(10)
+    return render_template("index.html", images=images)
 
 @main.route("/upload", methods=('GET', 'POST'))
 @login_required
