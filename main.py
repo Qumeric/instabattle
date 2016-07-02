@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_script import Manager
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap, WebCDN
 from flask_wtf import Form
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import Required, Email
@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'temp' # FIXME
 manager = Manager(app)
 bootstrap = Bootstrap(app)
+app.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
+    '//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/' # Use jquery 3.0.0
+)
 
 class RegisterForm(Form):
     email = StringField('Email', validators=[Required(), Email()])
