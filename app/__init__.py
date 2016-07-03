@@ -30,6 +30,12 @@ def create_app(config_name):
     from .frontend import frontend as frontend_blueprint
     app.register_blueprint(frontend_blueprint)
 
+    from .gallery import gallery as gallery_blueprint
+    app.register_blueprint(gallery_blueprint, url_prefix="/gallery")
+
+    from .battle import battle as battle_blueprint
+    app.register_blueprint(battle_blueprint, url_prefix="/battles")
+
     from .frontend import nav
     nav.init_app(app)
 

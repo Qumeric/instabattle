@@ -4,6 +4,7 @@ from wtforms import FileField, SubmitField
 from wtforms import ValidationError
 from wtforms.validators import Required
 
+
 class UploadForm(Form):
     image = FileField("Your Image", validators=[Required()])
     submit = SubmitField("Submit")

@@ -70,3 +70,6 @@ venv
 
 # DB migrations
 migrations/
+
+# Images
+app/static/images/

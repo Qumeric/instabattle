@@ -7,8 +7,9 @@ nav = Nav()
 
 
 def frontend_nav():
-    navbar = Navbar('', (View("Instabattle", 'main.index')), )
-    navbar.items = list(navbar.items)
+    navbar = Navbar('', View("Instabattle", 'main.index'),
+                         View("Gallery", 'gallery.show'),)
+    navbar.items = list(navbar.items) # FIXME should be fixed in nav 0.6
 
     if current_user.is_authenticated:
         navbar.items.append(View("Log Out", 'auth.logout'))
@@ -16,6 +17,8 @@ def frontend_nav():
     else:
         navbar.items.append(View("Log In", 'auth.login'))
         navbar.items.append(View("Register", 'auth.register'))
+
+    navbar.items.append(View("Battles", 'battle.battles'))
 
     return navbar
 
