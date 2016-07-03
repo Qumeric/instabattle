@@ -3,6 +3,7 @@ from flask_login import login_required
 from .forms import BattleForm
 from . import battle
 from ..models import Battle, Image
+from ..filters import filters
 
 
 @battle.route("/")
@@ -22,4 +23,5 @@ def battle(battle_id):
     return render_template("battles/battle.html",
                            battle=battle,
                            image=image,
-                           form=form)
+                           form=form,
+                           filters=filters)

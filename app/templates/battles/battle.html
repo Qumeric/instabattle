@@ -12,9 +12,9 @@
   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose a filter
     <span class="caret"></span></button>
   <ul class="dropdown-menu">
-    <li><button onclick='$("#{{ image.name }}").attr("class", "");'>No filter</button></li>
-    <li><button onclick='$("#{{ image.name }}").attr("class", "aden");'>Aden</button></li>
-    <li><button onclick='$("#{{ image.name }}").attr("class", "reyes");'>Reyes</button></li>
+    {% for n, f in filters %}
+    <li><button onclick='$("#{{ image.name }}").attr("class", "{{ f }}");'>{{ n }}</button></li>
+    {% endfor %}
   </ul>
 </div>
 

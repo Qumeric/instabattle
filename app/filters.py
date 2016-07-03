@@ -1,0 +1,21 @@
+filters = (
+        ("No filter", ""),
+        ("Aden", "aden"),
+        ("Reyes", "reyes"),
+        ("Perpetua", "perpetua"),
+        ("Inkwell", "inkwell"),
+        ("Toaster", "toaster"),
+        ("Walden", "walden"),
+        ("Hudson", "hudson"),
+        ("Gingham", "gingham"),
+        ("Mayfair", "mayfair"),
+        ("Lo-fi", "lofi"),
+        ("X-Pro II", "xpro2"),
+        ("1977", "_1977"),
+        ("Brooklyn", "brooklyn"),
+        ("Nashville", "nashville"),
+        ("Lark", "lark"),
+        ("Moon", "moon"),
+        ("Clarendon", "clarendon"),
+        ("Willow", "willow")
+        )
