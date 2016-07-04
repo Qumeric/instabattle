@@ -41,6 +41,12 @@ class Role(db.Model):  # FIXME do I need it?
     def __repr__(self):
         return "<Role {}>".format(self.name)
 
+class Vote(db.Model):
+    __tablename__ = 'votes'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    battle_id = db.Column(db.Integer, db.ForeignKey('battles.id'), primary_key=True)
+    choice = db.Column(db.Enum('challenger', 'challenged'))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 class Battle(db.Model):
     __tablename__ = 'battles'
@@ -52,6 +58,11 @@ class Battle(db.Model):
     challenged_finished = db.Column(db.Boolean, default=False)
     voting_finished = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    votes = db.relationship(
+        'Vote',
+        backref='battle',
+        lazy='dynamic',
+        cascade='all, delete-orphan')
 
     def __repr__(self):
         return "<Battle between {} and {}>".format(
@@ -76,7 +87,7 @@ class User(UserMixin, db.Model):
     challenged_by = db.relationship(
         'Battle',
         foreign_keys=[Battle.challenged_id],
-        backref=db.backref('challenged', lazy='joined'), # FIXME lazy='joined'?
+        backref=db.backref('challenged', lazy='joined'), # FIXME why lazy='joined'?
         lazy='dynamic',
         cascade='all, delete-orphan')
     challenged_who = db.relationship(
@@ -85,6 +96,12 @@ class User(UserMixin, db.Model):
         backref=db.backref('challenger', lazy='joined'),
         lazy='dynamic',
         cascade='all, delete-orphan')
+    votes = db.relationship(
+        'Vote',
+        backref='voter',
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+
     
 
     avatar_hash = db.Column(db.String(32))

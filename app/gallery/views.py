@@ -28,7 +28,7 @@ def show_image(image_id):
             flash("You cannot challenge yourself!")
         else:
             flash("Let the battle begin!")
-            return redirect(url_for('battle.battle', battle_id = battle.id))
+            return redirect(url_for('battle.fight', battle_id = battle.id))
                 
     return render_template("gallery/show_image.html", image=image, form=form, user=user)
 

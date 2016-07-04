@@ -11,11 +11,19 @@
     </div>
     <div class="battle-content">
         <div class="battle-date">{{ moment(battle.timestamp).fromNow() }}</div>
-        <figure class="post-body">
-          <a href="{{ url_for('battle.battle', battle_id=battle.id) }}">
-          <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+        <p>Votes for challenger: {{ battle.votes.filter_by(choice="challenger").count() }}</p>
+        <p>Votes for challenged: {{ battle.votes.filter_by(choice="challenged").count() }}</p>
+          <a href="{{ url_for('battle.fight', battle_id=battle.id) }}">
+          <figure class="post-body">
+            <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+          </figure>
           </a>
-        </figure>
+          {% if current_user.can(Permission.VOTE) and current_user.id not in (battle.challenger.id, battle.challenged.id) %}
+          <a href="{{ url_for('battle.vote', battle_id=battle.id, choice="challenger") }}"
+            class="btn btn-default">Vote for challenger</a>
+          <a href="{{ url_for('battle.vote', battle_id=battle.id, choice="challenged") }}"
+            class="btn btn-default">Vote for challenged</a>
+          {% endif %}
       </div>
   </li>
   {% endfor %}

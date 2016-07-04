@@ -51,9 +51,11 @@ def init():
 
     user_a = User(username='a', email='aa@aa.aa', password='123', confirmed=True)
     user_b = User(username='b', email='bb@bb.bb', password='123', confirmed=True)
+    user_c = User(username='c', email='cc@cc.cc', password='123', confirmed=True)
     lenna = Image(name='lenna', user=user_a)
     db.session.add(user_a)
     db.session.add(user_b)
+    db.session.add(user_c)
     db.session.add(lenna)
     db.session.commit()
 
