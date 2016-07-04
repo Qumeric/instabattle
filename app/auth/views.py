@@ -1,10 +1,11 @@
-from flask import render_template, session, redirect, url_for, flash, request
+from flask import render_template, session, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, login_required
 from . import auth
 from .forms import RegisterForm, LoginForm
 from . import auth
 from .. import db
 from ..models import User
+from ..email import send_email
 
 @auth.route("/register", methods=('GET', 'POST'))
 def register():
@@ -13,6 +14,8 @@ def register():
         user = User(email=form.email.data, password=form.password.data)
         db.session.add(user)
         db.session.commit()
+        if current_app.config['ADMIN']: # FIXME
+            send_email(current_app.config['ADMIN'], "New user", 'mail/new_user', user=user)
         flash("You can login now")
         return redirect(url_for('auth.login'))
     return render_template("auth/register.html", form=form)
