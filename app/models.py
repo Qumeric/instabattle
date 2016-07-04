@@ -48,24 +48,20 @@ class Battle(db.Model):
     challenger_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     challenged_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     image_id = db.Column(db.Integer, db.ForeignKey('images.id'))
-    challenger_finished = db.Column(db.Boolean, default=False)
-    challenged_finished = db.Column(db.Boolean, default=False)
-    winner = db.Column(
-        db.Enum('none', 'challenger', 'challenged'),
-        default='none')
-    challenger_votes = db.Column(db.Integer, default=0)
-    challenged_votes = db.Column(db.Integer, default=0)
+    #challenger_finished = db.Column(db.Boolean, default=False)
+    #challenged_finished = db.Column(db.Boolean, default=False)
+    #winner = db.Column(
+    #    db.Enum('none', 'challenger', 'challenged'),
+    #    default='none')
+    #challenger_votes = db.Column(db.Integer, default=0)
+    #challenged_votes = db.Column(db.Integer, default=0)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    sqlite_autoincrement = True
 
     def __repr__(self):
         return "<Battle between {} and {}>".format(
-            User.query.filter_by(id=self.challenger_id).username,
-            User.query.filter_by(id=self.challenged_id).username)
-
-
-challenges = db.Table(
-    'challenges', db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('battle_id', db.Integer, db.ForeignKey('battles.id')))
+            User.query.filter_by(id=self.challenger_id).first().username,
+            User.query.filter_by(id=self.challenged_id).first().username)
 
 
 class User(UserMixin, db.Model):
@@ -82,11 +78,19 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     images = db.relationship('Image', backref='user', lazy='dynamic')
-    battles = db.relationship(
-            'Battle',
-            secondary=challenges,
-            backref=db.backref('challenger', lazy='dynamic'), # FIXME lazy='joined'?
-            lazy='dynamic')
+    challenged_by = db.relationship(
+        'Battle',
+        foreign_keys=[Battle.challenged_id],
+        backref=db.backref('challenged', lazy='joined'), # FIXME lazy='joined'?
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+    challenged_who = db.relationship(
+        'Battle',
+        foreign_keys=[Battle.challenger_id],
+        backref=db.backref('challenger', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+
     avatar_hash = db.Column(db.String(32))
 
     @staticmethod
@@ -165,14 +169,13 @@ class User(UserMixin, db.Model):
         db.session.commit()
         return True
 
-    def challenge(self, user_id, image_id):
-        if self.id == user_id:
+    def challenge(self, user, image):
+        if self.id == user.id:
             raise ValueError("A user cannot challenge himself")
-        battle = Battle(challenger_id=self.id,
-                        challenged_id=user_id,
-                        image_id=image_id)
+        battle = Battle(challenger=self, # FIXME check
+                        challenged=user,
+                        image=image)
         db.session.add(battle)
-        self.battles.append(battle)
         db.session.commit()
         return battle
 
@@ -201,6 +204,10 @@ class User(UserMixin, db.Model):
             default=default,
             rating=rating)
 
+    @property
+    def battles(self):
+        return self.challenged_by.union(self.challenged_who).order_by(Battle.timestamp.desc())
+
     def __repr__(self):
         return "<User {}>".format(self.email)
 
@@ -228,3 +235,7 @@ class Image(db.Model):
     name = db.Column(db.String(32), unique=True, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     battles = db.relationship('Battle', backref='image', lazy='dynamic')
+
+    def __repr__(self):
+        return "<Image {}>".format(self.name)
+

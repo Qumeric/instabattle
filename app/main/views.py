@@ -21,7 +21,7 @@ def upload():
         file = request.files['image']
         filename = uuid4().hex
         file.save(os.path.join(current_app.config['UPLOAD_DIR'], filename))
-        image = Image(name=filename, user_id=current_user.id)
+        image = Image(name=filename, user_id=current_user.id) # FIXME user, not id?
         db.session.add(image)
         db.session.commit()
         flash("Your image has been loaded")
@@ -31,5 +31,5 @@ def upload():
 @main.route("/user/<username>")
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    battles = user.battles.order_by(Battle.timestamp.desc()).all()
+    battles = user.battles.all()
     return render_template("user.html", user=user, battles=battles)

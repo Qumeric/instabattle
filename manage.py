@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+from subprocess import call
 from app import create_app, db
 from app.models import User, Role, Image, Permission, Battle
 from flask_script import Manager, Shell
@@ -33,6 +34,26 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+
+@manager.command
+def init():
+    from flask_migrate import init, migrate
+
+    call(["rm", "-rf", "data-dev.sqlite", "migrations"])
+
+    init()
+    migrate()
+    deploy()
+
+    user_a = User(username='a', email='aa@aa.aa', password='123', confirmed=True)
+    user_b = User(username='b', email='bb@bb.bb', password='123', confirmed=True)
+    lenna = Image(name='lenna', user=user_a)
+    db.session.add(user_a)
+    db.session.add(user_b)
+    db.session.add(lenna)
+    db.session.commit()
+
+
 @manager.command
 def deploy():
     from flask_migrate import upgrade
@@ -40,6 +61,7 @@ def deploy():
     upgrade()
 
     Role.insert_roles()
+
 
 if __name__ == '__main__':
     manager.run()
