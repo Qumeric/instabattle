@@ -48,15 +48,10 @@ class Battle(db.Model):
     challenger_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     challenged_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     image_id = db.Column(db.Integer, db.ForeignKey('images.id'))
-    #challenger_finished = db.Column(db.Boolean, default=False)
-    #challenged_finished = db.Column(db.Boolean, default=False)
-    #winner = db.Column(
-    #    db.Enum('none', 'challenger', 'challenged'),
-    #    default='none')
-    #challenger_votes = db.Column(db.Integer, default=0)
-    #challenged_votes = db.Column(db.Integer, default=0)
+    challenger_finished = db.Column(db.Boolean, default=False)
+    challenged_finished = db.Column(db.Boolean, default=False)
+    voting_finished = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    sqlite_autoincrement = True
 
     def __repr__(self):
         return "<Battle between {} and {}>".format(
@@ -90,6 +85,7 @@ class User(UserMixin, db.Model):
         backref=db.backref('challenger', lazy='joined'),
         lazy='dynamic',
         cascade='all, delete-orphan')
+    
 
     avatar_hash = db.Column(db.String(32))
 

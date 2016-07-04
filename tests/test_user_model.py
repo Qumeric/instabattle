@@ -117,7 +117,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue('http://www.gravatar.com/avatar/' +
                         'd4c74594d841139328695756648b6bd6'in gravatar)
         self.assertTrue('s=256' in gravatar_256)
-        self.assertTrue('r=r' in gravatar_pg)
+        self.assertTrue('r=r' in gravatar_r)
         self.assertTrue('d=retro' in gravatar_retro)
         self.assertTrue('https://secure.gravatar.com/avatar/' +
                         'd4c74594d841139328695756648b6bd6' in gravatar_ssl)

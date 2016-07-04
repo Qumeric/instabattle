@@ -28,15 +28,19 @@ manager.add_command("db", MigrateCommand)
 
 
 @manager.command
-def test():
-    """Tun the unit tests."""
+def test(name=None):
+    """Run the unit tests."""
     import unittest
-    tests = unittest.TestLoader().discover('tests')
+    loader = unittest.TestLoader()
+    if name:
+        loader.testMethodPrefix = 'test_' + name
+    tests = loader.discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 
 @manager.command
 def init():
+    """[Re]cretate database, deploy and create two sample users and an image"""
     from flask_migrate import init, migrate
 
     call(["rm", "-rf", "data-dev.sqlite", "migrations"])
