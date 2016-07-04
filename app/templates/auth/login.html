@@ -8,6 +8,7 @@
   <h1>You can log in here</h1>
   {{ wtf.quick_form(form) }}
   <br>
+  <p>Forgor your password? <a href="{{ url_for('auth.password_reset_request') }}">Reset</a></p>
   <p>New user? <a href="{{ url_for('auth.register') }}">Join!</a></p>
 </div>
 {% endblock %}

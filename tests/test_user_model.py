@@ -25,7 +25,7 @@ class UserModelTestCase(unittest.TestCase):
         with self.assertRaises(AttributeError):
             u.password
 
-    def test_password_verification(self):
+    def test_password_verifi123ion(self):
         u = User(password='123')
         self.assertTrue(u.verify_password('123'))
         self.assertFalse(u.verify_password('456'))
@@ -52,9 +52,27 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u2.confirm(token))
 
     def test_expired_confirmation_token(self):
-        u = User(password='cat')
+        u = User(password='123')
         db.session.add(u)
         db.session.commit()
         token = u.generate_confirmation_token(1)
         sleep(2)
         self.assertFalse(u.confirm(token))
+
+    def test_valid_reset_token(self):
+        u = User(password='123')
+        db.session.add(u)
+        db.session.commit()
+        token = u.generate_reset_token()
+        self.assertTrue(u.reset_password(token, '456'))
+        self.assertTrue(u.verify_password('456'))
+
+    def test_invalid_reset_token(self):
+        u1 = User(password='123')
+        u2 = User(password='456')
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        token = u1.generate_reset_token()
+        self.assertFalse(u2.reset_password(token, '789'))
+        self.assertTrue(u2.verify_password('456'))
