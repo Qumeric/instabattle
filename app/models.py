@@ -55,11 +55,12 @@ class Battle(db.Model):
         default='none')
     challenger_votes = db.Column(db.Integer, default=0)
     challenged_votes = db.Column(db.Integer, default=0)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return "<Battle between {} and {}>".format(
-            User.query.filter_by(id=user1_id).email,
-            User.query.filter_by(id=user2_id).email)
+            User.query.filter_by(id=self.challenger_id).username,
+            User.query.filter_by(id=self.challenged_id).username)
 
 
 challenges = db.Table(
@@ -84,7 +85,7 @@ class User(UserMixin, db.Model):
     battles = db.relationship(
             'Battle',
             secondary=challenges,
-            backref=db.backref('users', lazy='dynamic'), # FIXME lazy='joined'?
+            backref=db.backref('challenger', lazy='dynamic'), # FIXME lazy='joined'?
             lazy='dynamic')
     avatar_hash = db.Column(db.String(32))
 
@@ -205,3 +206,4 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    battles = db.relationship('Battle', backref='image', lazy='dynamic')

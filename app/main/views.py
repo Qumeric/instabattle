@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from flask_login import login_required
 from .forms import UploadForm
 from . import main
-from ..models import Image, User
+from ..models import Image, User, Battle
 from .. import db
 from flask_login import current_user
 
@@ -31,4 +31,5 @@ def upload():
 @main.route("/user/<username>")
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template("user.html", user=user)
+    battles = user.battles.order_by(Battle.timestamp.desc()).all()
+    return render_template("user.html", user=user, battles=battles)

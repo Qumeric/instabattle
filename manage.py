@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 from app import create_app, db
-from app.models import User, Role, Image, Permission
+from app.models import User, Role, Image, Permission, Battle
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from flask_moment import Moment
@@ -18,7 +18,8 @@ def make_shell_context():
                 User=User,
                 Role=Role,
                 Image=Image,
-                Permission=Permission)
+                Permission=Permission,
+                Battle=Battle)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -32,6 +33,13 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+@manager.command
+def deploy():
+    from flask_migrate import upgrade
+
+    upgrade()
+
+    Role.insert_roles()
 
 if __name__ == '__main__':
     manager.run()

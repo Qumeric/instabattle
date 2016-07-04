@@ -1,7 +1,7 @@
 from flask import render_template, flash, url_for, redirect
 from flask_login import current_user, login_required
 from . import gallery
-from ..models import Image, User, Battle
+from ..models import Image, User, Battle, Permission
 from .. import db
 from .forms import ChallengeForm
 
@@ -15,7 +15,7 @@ def show():
 @login_required
 def show_image(image_id):
     form = ChallengeForm()
-    if form.validate_on_submit():
+    if current_user.can(Permission.CHALLENGE) and form.validate_on_submit():
         challenged_user = User.query.filter_by(email=form.email.data).first()
         try:
             battle = current_user.challenge(challenged_user.id, image_id)
@@ -25,7 +25,7 @@ def show_image(image_id):
             flash("Let the battle begin!")
             return redirect(url_for('battle.battle', battle_id = battle.id))
                 
-
+    user = current_user._get_current_object()
     image = Image.query.filter_by(id=image_id).first_or_404()
-    return render_template("gallery/show_image.html", image=image, form=form)
+    return render_template("gallery/show_image.html", image=image, form=form, user=user)
 

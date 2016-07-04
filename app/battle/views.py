@@ -15,7 +15,6 @@ def battles():
 
 @battle.route("/<int:battle_id>", methods=('GET', 'POST'))
 @login_required
-@permission_required(Permission.CHALLENGE)
 def battle(battle_id):
     form = BattleForm()
     if form.validate_on_submit():

@@ -1,0 +1,22 @@
+<ul class="battles">
+    {% for battle in battles %}
+    <li class="battle">
+        <div class="battle-thumbnail">
+            <a href="{{ url_for('.user', username=battle.challenger.first().username) }}">
+              <img class="img-rounded profile-thumbnail" src="{{ battle.challenger.first().gravatar(size=40) }}">
+            </a>
+            <!--FIXME<a href=" url_for('.user', username=battle.challenged.username) ">
+                <img class="img-rounded profile-thumbnail" src=" battle.challenged.gravatar(size=40) ">
+            </a>-->
+        </div>
+        <div class="battle-content">
+            <div class="battle-date">{{ moment(battle.timestamp).fromNow() }}</div>
+            <figure class="post-body">
+              <a href="{{ url_for('battle.battle', battle_id=battle.id) }}">
+              <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+              </a>
+            </figure>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
