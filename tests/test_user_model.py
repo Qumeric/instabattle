@@ -76,3 +76,12 @@ class UserModelTestCase(unittest.TestCase):
         token = u1.generate_reset_token()
         self.assertFalse(u2.reset_password(token, '789'))
         self.assertTrue(u2.verify_password('456'))
+
+    def test_roles_and_permissions(self):
+        u = User(email='john@example.com', password='123')
+        self.assertTrue(u.can(Permission.SUGGEST))
+        self.assertFalse(u.can(Permission.APPROVE))
+
+    def test_anonymous_user(self):
+        u = AnonymousUser()
+        self.assertFalse(u.can(Permission.CHALLENGE))
