@@ -1,0 +1,6 @@
+Hi, {{ user.email }}!
+
+Welcome to Instabattle!
+
+To confirm your account please follow this link:
+{{ url_for('auth.confirm', token=token, _external=True) }}

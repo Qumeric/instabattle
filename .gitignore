@@ -63,6 +63,7 @@ target/
 
 # SQLite
 *.sqlite
+*.sqlite-journal
 
 # Virtual environment
 venv
