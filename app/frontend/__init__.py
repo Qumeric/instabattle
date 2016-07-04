@@ -15,6 +15,7 @@ def frontend_nav():
         navbar.items.append(View("Profile", 'main.user', username=current_user.username))
         navbar.items.append(View("Log Out", 'auth.logout'))
         navbar.items.append(View("Upload", 'main.upload'))
+        navbar.items.append(View("Challenges", 'battle.challenges'))
     else:
         navbar.items.append(View("Log In", 'auth.login'))
         navbar.items.append(View("Register", 'auth.register'))

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Awaiting challenges{% endblock %}
+
+{% block page_content %}
+<ul class="battles">
+  <h2>Waiting for you</h2>
+  {% for battle in incoming %}
+  <li class="battle">
+    <div class="battle-thumbnail">
+      <a href="{{ url_for('main.user', username=battle.challenged.username) }}">
+        <img class="img-rounded profile-thumbnail" src="{{ battle.challenged.gravatar(size=40) }}">
+      </a>
+    </div>
+    <div class="battle-content">
+        <div class="battle-date">{{ moment(battle.timestamp).fromNow() }}</div>
+          <figure class="post-body">
+            <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+          </figure>
+          <a href="{{ url_for('battle.decide', battle_id=battle.id, accepted=1) }}"
+            class="btn btn-default">Accept</a>
+          <a href="{{ url_for('battle.decide', battle_id=battle.id, accepted=0) }}"
+            class="btn btn-default">Decline</a>
+      </div>
+  </li>
+  {% endfor %}
+
+  <h2>Waiting for enemy</h2>
+  {% for battle in waiting %}
+  <li class="battle">
+  <div class="battle-thumbnail">
+      <a href="{{ url_for('main.user', username=battle.challenged.username) }}">
+        <img class="img-rounded profile-thumbnail" src="{{ battle.challenged.gravatar(size=40) }}">
+      </a>
+    </div>
+    <div class="battle-content">
+        <div class="battle-date">{{ moment(battle.timestamp).fromNow() }}</div>
+          <figure class="post-body">
+            <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+          </figure>
+      </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

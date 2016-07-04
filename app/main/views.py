@@ -31,5 +31,5 @@ def upload():
 @main.route("/user/<username>")
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    battles = user.battles.all()
+    battles = user.battles.filter_by(challenge_accepted=True).all()
     return render_template("user.html", user=user, battles=battles)

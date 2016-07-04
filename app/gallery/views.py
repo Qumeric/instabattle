@@ -27,8 +27,8 @@ def show_image(image_id):
         except ValueError:
             flash("You cannot challenge yourself!")
         else:
-            flash("Let the battle begin!")
-            return redirect(url_for('battle.fight', battle_id = battle.id))
+            flash("Challenge has been sent")
+            return redirect(url_for('battle.challenges'))
                 
     return render_template("gallery/show_image.html", image=image, form=form, user=user)
 

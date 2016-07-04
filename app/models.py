@@ -54,9 +54,10 @@ class Battle(db.Model):
     challenger_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     challenged_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     image_id = db.Column(db.Integer, db.ForeignKey('images.id'))
+    challenge_accepted = db.Column(db.Boolean, default=False)
     challenger_finished = db.Column(db.Boolean, default=False)
     challenged_finished = db.Column(db.Boolean, default=False)
-    voting_finished = db.Column(db.Boolean, default=False)
+    is_finished = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     votes = db.relationship(
         'Vote',
