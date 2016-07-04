@@ -4,9 +4,11 @@ from app import create_app, db
 from app.models import User, Role, Image, Permission
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from flask_moment import Moment
 
 app = create_app(os.environ.get('FLASK_CONFIG'))
 manager = Manager(app)
+moment = Moment(app)
 migrate = Migrate(app, db)
 
 

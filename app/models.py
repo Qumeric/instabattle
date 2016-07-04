@@ -1,3 +1,4 @@
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -69,10 +70,15 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    name = db.Column(db.String(64))
     email = db.Column(db.String(120), unique=True, index=True)
+    about_me = db.Column(db.Text())
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     images = db.relationship('Image', backref='user', lazy='dynamic')
     battles = db.relationship(
             'Battle',
@@ -85,7 +91,7 @@ class User(UserMixin, db.Model):
         if self.role is None:
             if self.email == current_app.config['ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
-            else:
+            if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
 
     @property
@@ -145,10 +151,16 @@ class User(UserMixin, db.Model):
         return battle
 
     def can(self, permissions):
-        return (self.role.permissions & permissions) == permissions
+        return self.role and (self.role.permissions & permissions
+                              ) == permissions
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return "<User {}>".format(self.email)

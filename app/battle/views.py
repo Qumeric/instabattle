@@ -2,7 +2,8 @@ from flask import render_template
 from flask_login import login_required
 from .forms import BattleForm
 from . import battle
-from ..models import Battle, Image
+from ..decorators import permission_required
+from ..models import Battle, Image, Permission
 from ..filters import filters
 
 
@@ -14,6 +15,7 @@ def battles():
 
 @battle.route("/<int:battle_id>", methods=('GET', 'POST'))
 @login_required
+@permission_required(Permission.CHALLENGE)
 def battle(battle_id):
     form = BattleForm()
     if form.validate_on_submit():

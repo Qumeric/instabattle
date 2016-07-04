@@ -1,7 +1,8 @@
 import unittest
 from time import sleep
+from datetime import datetime
 from app import create_app, db
-from app.models import User
+from app.models import User, Role, AnonymousUser, Permission
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -10,6 +11,7 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
+        Role.insert_roles()
 
     def tearDown(self):
         db.session.remove()
@@ -85,3 +87,20 @@ class UserModelTestCase(unittest.TestCase):
     def test_anonymous_user(self):
         u = AnonymousUser()
         self.assertFalse(u.can(Permission.CHALLENGE))
+
+    def test_timestamps(self):
+        u = User(password='123')
+        db.session.add(u)
+        db.session.commit()
+        self.assertTrue(
+            (datetime.utcnow() - u.member_since).total_seconds() < 3)
+        self.assertTrue((datetime.utcnow() - u.last_seen).total_seconds() < 3)
+
+    def test_ping(self):
+        u = User(password='123')
+        db.session.add(u)
+        db.session.commit()
+        sleep(2)
+        last_seen_before = u.last_seen
+        u.ping()
+        self.assertTrue(u.last_seen > last_seen_before)

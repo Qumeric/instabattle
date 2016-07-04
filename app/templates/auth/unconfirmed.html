@@ -4,7 +4,7 @@
 
 {% block page_content %}
 <div class="page-header">
-  <h2>{{ current_user.email }}, you have not confirmed your account yet</h2>
+  <h2>{{ current_user.username }}, you have not confirmed your account yet</h2>
     <p>
       Need another confirmation email?
       <a href="{{ url_for('auth.resend_confirmation') }}">Click here</a>

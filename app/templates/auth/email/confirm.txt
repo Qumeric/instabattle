@@ -1,4 +1,4 @@
-Hi, {{ user.email }}!
+Hi, {{ user.username }}!
 
 Welcome to Instabattle!
 

@@ -12,6 +12,7 @@ def frontend_nav():
     navbar.items = list(navbar.items) # FIXME should be fixed in nav 0.6
 
     if current_user.is_authenticated:
+        navbar.items.append(View("Profile", 'main.user', username=current_user.username))
         navbar.items.append(View("Log Out", 'auth.logout'))
         navbar.items.append(View("Upload", 'main.upload'))
     else:

@@ -30,6 +30,7 @@
 
 {% block scripts %}
 {{ super() }}
+{{ moment.include_moment() }}
 <script src="static/scripts.js"></script>
 {% endblock %}
 

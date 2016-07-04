@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from flask_login import login_required
 from .forms import UploadForm
 from . import main
-from ..models import Image
+from ..models import Image, User
 from .. import db
 from flask_login import current_user
 
@@ -27,3 +27,8 @@ def upload():
         flash("Your image has been loaded")
         return redirect(url_for('main.index'))
     return render_template("upload.html", form=form)
+
+@main.route("/user/<username>")
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template("user.html", user=user)
