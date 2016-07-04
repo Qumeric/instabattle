@@ -3,5 +3,6 @@
 {% block title %}List of battles{% endblock %}
 
 {% block page_content %}
-  <h1>Total battles: {{ count }}</h1>
+  <h1>Total battles: {{ battles_count }}</h1>
+  {% include '_battles.html' %}
 {% endblock %}

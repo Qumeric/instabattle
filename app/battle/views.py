@@ -9,8 +9,10 @@ from ..filters import filters
 
 @battle.route("/")
 def battles():
-    battle_count = Battle.query.count()
-    return render_template("battles/battles.html", count=battle_count)
+    battles = Battle.query.all()
+    return render_template("battles/battles.html",
+                           battles=battles,
+                           battles_count=len(battles))
 
 
 @battle.route("/<int:battle_id>", methods=('GET', 'POST'))
