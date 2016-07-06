@@ -2,7 +2,7 @@
 import os
 from subprocess import call
 from app import create_app, db
-from app.models import User, Role, Image, Permission, Battle
+from app.models import User, Role, Image, Permission, Battle, Vote
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from flask_moment import Moment
@@ -14,13 +14,19 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
+    from app.schemas import UserSchema, BattleSchema, ImageSchema, VoteSchema
     return dict(app=app,
                 db=db,
+                Vote=Vote,
                 User=User,
                 Role=Role,
                 Image=Image,
                 Permission=Permission,
-                Battle=Battle)
+                Battle=Battle,
+                US=UserSchema(),
+                IS=ImageSchema(),
+                VS=VoteSchema(),
+                BS=BattleSchema())
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -49,14 +55,32 @@ def init():
     migrate()
     deploy()
 
-    user_a = User(username='a', email='aa@aa.aa', password='123', confirmed=True)
-    user_b = User(username='b', email='bb@bb.bb', password='123', confirmed=True)
-    user_c = User(username='c', email='cc@cc.cc', password='123', confirmed=True)
+    user_a = User(username='a',
+                  email='aa@aa.aa',
+                  password='123',
+                  confirmed=True)
+    user_b = User(username='b',
+                  email='bb@bb.bb',
+                  password='123',
+                  confirmed=True)
+    user_c = User(username='c',
+                  email='cc@cc.cc',
+                  password='123',
+                  confirmed=True)
     lenna = Image(name='lenna', user=user_a)
+    battle1 = user_a.challenge(user_b, lenna)
+    battle1.challenge_accepted = True
+    user_c.vote(battle1, "challenger")
+    battle2 = user_a.challenge(user_b, lenna)
+    battle3 = user_c.challenge(user_a, lenna)
+
     db.session.add(user_a)
     db.session.add(user_b)
     db.session.add(user_c)
     db.session.add(lenna)
+    db.session.add(battle1)
+    db.session.add(battle2)
+    db.session.add(battle3)
     db.session.commit()
 
 

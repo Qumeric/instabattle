@@ -4,7 +4,7 @@
 
 {% block page_content %}
 <ul class="battles">
-  <h2>Waiting for you</h2>
+  <h2>Waiting for you ({{ incoming|count }})</h2>
   {% for battle in incoming %}
   <li class="battle">
     <div class="battle-thumbnail">
@@ -17,15 +17,15 @@
           <figure class="post-body">
             <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
           </figure>
-          <a href="{{ url_for('battle.decide', battle_id=battle.id, accepted=1) }}"
+          <a href="{{ url_for('battle.decide', id=battle.id, is_accepted=True) }}"
             class="btn btn-default">Accept</a>
-          <a href="{{ url_for('battle.decide', battle_id=battle.id, accepted=0) }}"
+          <a href="{{ url_for('battle.decide', id=battle.id, is_accepted=False) }}"
             class="btn btn-default">Decline</a>
       </div>
   </li>
   {% endfor %}
 
-  <h2>Waiting for enemy</h2>
+  <h2>Waiting for enemy ({{ waiting|count }})</h2>
   {% for battle in waiting %}
   <li class="battle">
   <div class="battle-thumbnail">

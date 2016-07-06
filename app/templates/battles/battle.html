@@ -4,8 +4,8 @@
 {% block title %}Battle #{{ battle.id }}{% endblock %}
 
 {% block page_content %}
-<figure id="{{ image.name }}">
-  <img class="img-responsive" src="{{ '/static/images/' + image.name }}" style="width: 100%">
+<figure id="{{ battle.image.name }}">
+  <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}" style="width: 100%">
 </figure>
 
 <div class="dropdown">
@@ -13,7 +13,7 @@
     <span class="caret"></span></button>
   <ul class="dropdown-menu">
     {% for n, f in filters %}
-    <li><button onclick='$("#{{ image.name }}").attr("class", "{{ f }}");'>{{ n }}</button></li>
+    <li><button onclick='$("#{{ battle.image.name }}").attr("class", "{{ f }}");'>{{ n }}</button></li>
     {% endfor %}
   </ul>
 </div>

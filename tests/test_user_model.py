@@ -3,6 +3,7 @@ from time import sleep
 from datetime import datetime
 from app import create_app, db
 from app.models import User, Role, AnonymousUser, Permission, Battle
+from app.schemas import user_schema
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -93,7 +94,7 @@ class UserModelTestCase(unittest.TestCase):
         db.session.add(u)
         db.session.commit()
         self.assertTrue(
-            (datetime.utcnow() - u.member_since).total_seconds() < 3)
+                (datetime.utcnow() - u.member_since).total_seconds() < 3)
         self.assertTrue((datetime.utcnow() - u.last_seen).total_seconds() < 3)
 
     def test_ping(self):
@@ -115,9 +116,20 @@ class UserModelTestCase(unittest.TestCase):
         with self.app.test_request_context('/', base_url='https://example.com'):
             gravatar_ssl = u.gravatar()
         self.assertTrue('http://www.gravatar.com/avatar/' +
-                        'd4c74594d841139328695756648b6bd6'in gravatar)
+                'd4c74594d841139328695756648b6bd6'in gravatar)
         self.assertTrue('s=256' in gravatar_256)
         self.assertTrue('r=r' in gravatar_r)
         self.assertTrue('d=retro' in gravatar_retro)
         self.assertTrue('https://secure.gravatar.com/avatar/' +
-                        'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+                'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+
+    def test_to_json(self):
+        u = User(email='me@example.com', password='473')
+        db.session.add(u)
+        db.session.commit()
+        json_user = user_schema.dump(u).data
+        expected_keys = ('username', 'name', 'member_since',
+                'last_seen', 'images', 'challenged_by', 'challenged_who',
+                'votes', '_links')
+        self.assertEqual(sorted(json_user.keys()), sorted(expected_keys))
+        self.assertTrue('api/user/' in json_user['_links']['self'])

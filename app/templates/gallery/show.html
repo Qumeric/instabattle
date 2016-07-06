@@ -9,7 +9,7 @@
     </div>
   {% for image in images %}
   <div class="col-lg-3 col-md-4 col-xs-6 thumb">
-    <a class="thumbnail" href="{{ url_for('gallery.show_image', image_id=image.id) }}">
+    <a class="thumbnail" href="{{ url_for('gallery.show_image', id=image.id) }}">
       <figure id="{{ image.name }}">
           <img class="img-responsive" src="{{ '/static/images/' + image.name }}" alt="">
       </figure>

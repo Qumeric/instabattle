@@ -28,8 +28,13 @@ def upload():
         return redirect(url_for('main.index'))
     return render_template("upload.html", form=form)
 
+# FIXME
+@main.route("/user/<int:id>")
 @main.route("/user/<username>")
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+def user(username=None, id=None):
+    if username:
+        user = User.query.filter_by(username=username).first_or_404()
+    if id:
+        user = User.query.get(id).first_or_404()
     battles = user.battles.filter_by(challenge_accepted=True).all()
     return render_template("user.html", user=user, battles=battles)

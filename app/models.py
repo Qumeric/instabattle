@@ -31,7 +31,7 @@ class Role(db.Model):  # FIXME do I need it?
                   Permission.APPROVE, False), ('Administrator', 0xff, False))
         for name, permissions, default in roles:
             role = Role.query.filter_by(name=name).first()
-            if role is None:
+            if not role:
                 role = Role(name=name)
             role.permissions = permissions
             role.default = default
@@ -41,29 +41,55 @@ class Role(db.Model):  # FIXME do I need it?
     def __repr__(self):
         return "<Role {}>".format(self.name)
 
+
 class Vote(db.Model):
     __tablename__ = 'votes'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    battle_id = db.Column(db.Integer, db.ForeignKey('battles.id'), primary_key=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.id'),
+                        primary_key=True)
+    battle_id = db.Column(db.Integer,
+                          db.ForeignKey('battles.id'),
+                          primary_key=True)
     choice = db.Column(db.Enum('challenger', 'challenged'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return "<Vote by {} for {} in battle #{}>".format(
+            self.voter.username, self.choice, self.battle_id)
+
 
 class Battle(db.Model):
     __tablename__ = 'battles'
     id = db.Column(db.Integer, primary_key=True)
-    challenger_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    challenged_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    image_id = db.Column(db.Integer, db.ForeignKey('images.id'))
+    challenger_id = db.Column(db.Integer,
+                              db.ForeignKey('users.id'),
+                              index=True)
+    challenged_id = db.Column(db.Integer,
+                              db.ForeignKey('users.id'),
+                              index=True)
+    image_id = db.Column(db.Integer, db.ForeignKey('images.id'), index=True)
     challenge_accepted = db.Column(db.Boolean, default=False)
     challenger_finished = db.Column(db.Boolean, default=False)
     challenged_finished = db.Column(db.Boolean, default=False)
     is_finished = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    votes = db.relationship(
-        'Vote',
-        backref='battle',
-        lazy='dynamic',
-        cascade='all, delete-orphan')
+    votes = db.relationship('Vote',
+                            backref='battle',
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
+
+    def decide(self, user, is_accepted):
+        if user != self.challenged:
+            raise ValueError("Attemp to accept/decline wrong battle")
+        if is_accepted:
+            self.challenge_accepted = True
+            db.session.add(self)
+        else:
+            db.session.delete(self)
+
+        db.session.commit()
+
+        return self if is_accepted else None
 
     def __repr__(self):
         return "<Battle between {} and {}>".format(
@@ -97,13 +123,10 @@ class User(UserMixin, db.Model):
         backref=db.backref('challenger', lazy='joined'),
         lazy='dynamic',
         cascade='all, delete-orphan')
-    votes = db.relationship(
-        'Vote',
-        backref='voter',
-        lazy='dynamic',
-        cascade='all, delete-orphan')
-
-    
+    votes = db.relationship('Vote',
+                            backref='voter',
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
 
     avatar_hash = db.Column(db.String(32))
 
@@ -193,6 +216,23 @@ class User(UserMixin, db.Model):
         db.session.commit()
         return battle
 
+    def vote(self, battle, choice):
+        if choice not in ("challenger", "challenged"):
+            raise ValueError(
+                "You can vote either for challenger or challenged")
+        if not (battle and battle.challenge_accepted):
+            raise ValueError(
+                "Attemp to vote on non-existing or not accepted battle")
+        old_v = Vote.query.filter_by(battle=battle, voter=self).first()
+        if old_v is not None:
+            old_v.choice = choice
+            db.session.add(old_v)
+        else:
+            v = Vote(battle=battle, voter=self, choice=choice)
+            db.session.add(v)
+        db.session.commit()
+        return self
+
     def can(self, permissions):
         return self.role and (self.role.permissions & permissions
                               ) == permissions
@@ -220,7 +260,21 @@ class User(UserMixin, db.Model):
 
     @property
     def battles(self):
-        return self.challenged_by.union(self.challenged_who).order_by(Battle.timestamp.desc())
+        return self.challenged_by.union(self.challenged_who).order_by(
+            Battle.timestamp.desc())
+
+    def generate_auth_token(self, expiration):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
 
     def __repr__(self):
         return "<User {}>".format(self.email)
@@ -252,4 +306,3 @@ class Image(db.Model):
 
     def __repr__(self):
         return "<Image {}>".format(self.name)
-

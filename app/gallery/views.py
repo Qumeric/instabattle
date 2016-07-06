@@ -11,11 +11,11 @@ def show():
     images = Image.query.limit(12)
     return render_template("gallery/show.html", images=images)
 
-@gallery.route("/image/<int:image_id>", methods=('GET', 'POST'))
+@gallery.route("/image/<int:id>", methods=('GET', 'POST'))
 @login_required
-def show_image(image_id):
+def show_image(id):
     form = ChallengeForm()
-    image = Image.query.filter_by(id=image_id).first_or_404()
+    image = Image.query.filter_by(id=id).first_or_404()
     user = current_user._get_current_object() # FIXME do I need it?
     if current_user.can(Permission.CHALLENGE) and form.validate_on_submit():
         challenged_user = User.query.filter_by(email=form.email.data).first()
