@@ -8,7 +8,7 @@ class Config:
     MAIL_PREFIX = "[Instabattle]"
     MAIL_SENDER = "Valery Che <qumidium@gmail.com>"
     ADMIN = os.environ.get('ADMIN')
-    UPLOAD_DIR = 'app/static/images' # Careful: hard-coded!
+    UPLOAD_DIR = 'app/static/images'  # Careful: hard-coded!
 
     @staticmethod
     def init_app(app):
@@ -17,6 +17,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    FLASK_COVERAGE = True
     DEBUG_TB_PROFILER_ENABLED = True
     DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
     MAIL_SERVER = 'smtp.googlemail.com'

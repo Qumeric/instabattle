@@ -5,3 +5,4 @@ httpie==0.9.4
 requests==2.10.0
 Pygments==2.13
 Flask-DebugToolbar==0.10.0
+coverage==4.1

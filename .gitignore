@@ -75,3 +75,6 @@ migrations/
 
 # Images
 app/static/images/
+
+# Temp files
+tmp/

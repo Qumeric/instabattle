@@ -11,12 +11,13 @@ from random import choice
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
-ma = None # A hack
+ma = None  # A hack
 toolbar = DebugToolbarExtension()
 
 login_manager = LoginManager()
 login_manager.session_protected = 'strong'
 login_manager.login_view = 'auth.login'
+
 
 def create_app(config_name):
     app = Flask(__name__)
