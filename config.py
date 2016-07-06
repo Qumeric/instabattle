@@ -17,6 +17,8 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    DEBUG_TB_PROFILER_ENABLED = True
+    DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True

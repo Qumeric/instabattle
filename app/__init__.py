@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_marshmallow import Marshmallow
+from flask_debugtoolbar import DebugToolbarExtension
 from config import config
 from random import choice
 
@@ -11,9 +12,10 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
 ma = None # A hack
+toolbar = DebugToolbarExtension()
 
 login_manager = LoginManager()
-login_manager.session_protected = 'strong'  # FIXME think about it
+login_manager.session_protected = 'strong'
 login_manager.login_view = 'auth.login'
 
 def create_app(config_name):
@@ -25,6 +27,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    toolbar.init_app(app)
     global ma
     ma = Marshmallow(app)
 
