@@ -5,10 +5,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
     MAIL_PREFIX = "[Instabattle]"
     MAIL_SENDER = "Valery Che <qumidium@gmail.com>"
     ADMIN = os.environ.get('ADMIN')
     UPLOAD_DIR = 'app/static/images'  # Careful: hard-coded!
+    SLOW_DB_QUERY_TIME = 0.5
 
     @staticmethod
     def init_app(app):
