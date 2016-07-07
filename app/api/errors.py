@@ -23,4 +23,3 @@ def forbidden(message):
 @api.errorhandler(ValueError)
 def validation_error(e):
     return bad_request(e.args[0])
-

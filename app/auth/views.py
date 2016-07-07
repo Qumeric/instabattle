@@ -20,15 +20,17 @@ def before_request():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, username=form.username.data, password=form.password.data)
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
         send_email(user.email,
-                "Confirm Your Account",
-                'auth/email/confirm',
-                user=user,
-                token=token)
+                   "Confirm Your Account",
+                   'auth/email/confirm',
+                   user=user,
+                   token=token)
         login_user(user)
         flash("Now confirm your email")
         return redirect(url_for('auth.login'))
@@ -48,10 +50,10 @@ def resend_confirmation():
     if not current_user.confirmed:
         token = current_user.generate_confirmation_token()
         send_email(current_user.email,
-                "Confirm Your Account",
-                'auth/email/confirm',
-                user=user,
-                token=token)
+                   "Confirm Your Account",
+                   'auth/email/confirm',
+                   user=user,
+                   token=token)
         flash("A new confirmation email has been sent")
     return redirect(url_for('main.index'))
 
@@ -87,6 +89,7 @@ def logout():
     flash("You have been logged out")
     return redirect(url_for('main.index'))
 
+
 @auth.route('/reset', methods=('GET', 'POST'))
 def password_reset_request():
     if not current_user.is_anonymous:
@@ -96,10 +99,12 @@ def password_reset_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_reset_token()
-            send_email(user.email, 'Reset Your Password',
-                    'auth/email/reset_password',
-                    user=user, token=token,
-                    next=request.args.get('next'))
+            send_email(user.email,
+                       'Reset Your Password',
+                       'auth/email/reset_password',
+                       user=user,
+                       token=token,
+                       next=request.args.get('next'))
             flash('An email with reset instructions been sent')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)

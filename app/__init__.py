@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_marshmallow import Marshmallow
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_moment import Moment
 from config import config
 from random import choice
 
@@ -13,6 +14,7 @@ db = SQLAlchemy()
 mail = Mail()
 ma = None  # A hack
 toolbar = DebugToolbarExtension()
+moment = Moment()
 
 login_manager = LoginManager()
 login_manager.session_protected = 'strong'
@@ -29,6 +31,7 @@ def create_app(config_name):
     mail.init_app(app)
     login_manager.init_app(app)
     toolbar.init_app(app)
+    moment.init_app(app)
     global ma
     ma = Marshmallow(app)
 

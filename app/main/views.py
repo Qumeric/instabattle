@@ -35,6 +35,6 @@ def user(username=None, id=None):
     if username:
         user = User.query.filter_by(username=username).first_or_404()
     if id:
-        user = User.query.get(id).first_or_404()
+        user = User.query.get_or_404(id)
     battles = user.battles.filter_by(challenge_accepted=True).all()
     return render_template("user.html", user=user, battles=battles)

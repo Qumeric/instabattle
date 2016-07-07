@@ -28,8 +28,8 @@ def vote(battle_id, choice):
         g.current_user.vote(battle=battle, choice=choice)
     except:
         return jsonify(
-            {'message': 'You cannot vote in this battle or vote is malformed'
-             }), 422
+            {'message':
+             'You cannot vote in this battle or vote is malformed'}), 422
     return redirect(request.args.get('next') or url_for('.battles',
                                                         _external=True)), 201
 

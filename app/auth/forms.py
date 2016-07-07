@@ -9,12 +9,12 @@ class RegisterForm(Form):
     email = StringField("Email",
                         validators=[Required(), Email(), Length(1, 120)])
     username = StringField("Username",
-                             validators=[
-                                 Required(), Length(1, 64),
-                                 Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                                        'Usernames must have only letters, '
-                                        'numbers, dots or underscores')
-                             ])
+                           validators=[
+                               Required(), Length(1, 64),
+                               Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                      'Usernames must have only letters, '
+                                      'numbers, dots or underscores')
+                           ])
     password = PasswordField("Password", validators=[Required()])
     submit = SubmitField("Register")
 
