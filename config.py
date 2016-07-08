@@ -9,6 +9,11 @@ class Config:
     SQLALCHEMY_RECORD_QUERIES = True
     MAIL_PREFIX = "[Instabattle]"
     MAIL_SENDER = "Valery Che <qumidium@gmail.com>"
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT'))
+    MAIL_USE_TLS = True
     ADMIN = os.environ.get('ADMIN')
     UPLOAD_DIR = 'app/static/images'  # Careful: hard-coded!
     SLOW_DB_QUERY_TIME = 0.5
@@ -23,11 +28,6 @@ class DevelopmentConfig(Config):
     FLASK_COVERAGE = True
     DEBUG_TB_PROFILER_ENABLED = True
     DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
-    MAIL_SERVER = 'smtp.googlemail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or \
             'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
@@ -61,7 +61,7 @@ class ProductionConfig(Config):
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
             fromaddr=cls.MAIL_SENDER,
             toaddrs=[cls.ADMIN],
-            subject=cls.MAIL_SUBJECT_PREFIX + ' Application Error',
+            subject=cls.MAIL_PREFIX + ' Application Error',
             credentials=credentials,
             secure=secure)
         mail_handler.setLevel(logging.ERROR)

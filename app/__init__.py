@@ -29,12 +29,14 @@ def create_app(config_name):
     login_manager.init_app(app)
     moment.init_app(app)
     global ma
-    ma = Marshmallow(app) # Hack
+    ma = Marshmallow(app)  # Hack
 
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
-        from flask_debugtoolbar import DebugToolbarExtension
         sslify = SSLify(app)
+
+    if app.debug:
+        from flask_debugtoolbar import DebugToolbarExtension
         toolbar = DebugToolbarExtension(app)
 
     from .main import main as main_blueprint
@@ -59,7 +61,7 @@ def create_app(config_name):
     nav.init_app(app)
 
     app.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
-            '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/'  # Use jquery 2
-            )
+        '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/'  # Use jquery 2
+    )
 
     return app
