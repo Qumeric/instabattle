@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_marshmallow import Marshmallow
-from flask_debugtoolbar import DebugToolbarExtension
 from flask_moment import Moment
 from config import config
 from random import choice
@@ -12,7 +11,6 @@ from random import choice
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
-toolbar = DebugToolbarExtension()
 moment = Moment()
 
 login_manager = LoginManager()
@@ -29,14 +27,15 @@ def create_app(config_name):
     bootstrap.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
-    toolbar.init_app(app)
     moment.init_app(app)
     global ma
     ma = Marshmallow(app) # Hack
 
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
+        from flask_debugtoolbar import DebugToolbarExtension
         sslify = SSLify(app)
+        toolbar = DebugToolbarExtension(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -60,7 +59,7 @@ def create_app(config_name):
     nav.init_app(app)
 
     app.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
-        '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/'  # Use jquery 2
-    )
+            '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/'  # Use jquery 2
+            )
 
     return app
