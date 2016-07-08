@@ -69,9 +69,6 @@ target/
 venv
 .env
 
-# DB migrations
-migrations/
-
 # Images
 app/static/images/
 
