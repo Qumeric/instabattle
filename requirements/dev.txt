@@ -3,6 +3,6 @@ ForgeryPy==0.1
 argcomplete==1.0.0
 httpie==0.9.4
 requests==2.10.0
-Pygments==2.13
+Pygments==2.1.3
 Flask-DebugToolbar==0.10.0
 coverage==4.1

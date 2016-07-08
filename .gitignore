@@ -68,7 +68,6 @@ target/
 # Virtual environment
 venv
 .env
-.autoxsh
 
 # DB migrations
 migrations/
