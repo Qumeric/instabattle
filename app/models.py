@@ -50,7 +50,7 @@ class Vote(db.Model):
     battle_id = db.Column(db.Integer,
                           db.ForeignKey('battles.id'),
                           primary_key=True)
-    choice = db.Column(db.Enum('challenger', 'challenged'))
+    choice = db.Column(db.String(16))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
