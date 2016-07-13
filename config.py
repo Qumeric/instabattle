@@ -13,7 +13,10 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT'))
-    MAIL_USE_TLS = True
+    MAIL_USE_TLS = True # FIXME check
+    #SENDGRID_USERNAME = os.environ.get('SENDGRID_USERNAME')
+    #SENDGRID_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+    SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
     ADMIN = os.environ.get('ADMIN')
     UPLOAD_DIR = 'app/static/images'  # Careful: hard-coded!
     SLOW_DB_QUERY_TIME = 0.5
