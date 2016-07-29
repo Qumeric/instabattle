@@ -1,13 +1,13 @@
 """empty message
 
-Revision ID: 4855b8b86c3a
+Revision ID: 620e37c33d40
 Revises: None
-Create Date: 2016-07-13 17:23:52.531144
+Create Date: 2016-07-29 12:18:02.740313
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '4855b8b86c3a'
+revision = '620e37c33d40'
 down_revision = None
 
 from alembic import op
@@ -27,6 +27,7 @@ def upgrade():
     op.create_index(op.f('ix_roles_default'), 'roles', ['default'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('experience', sa.Integer(), nullable=True),
     sa.Column('username', sa.String(length=64), nullable=True),
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=True),
@@ -54,6 +55,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('challenger_id', sa.Integer(), nullable=True),
     sa.Column('challenged_id', sa.Integer(), nullable=True),
+    sa.Column('challenger_filter', sa.String(length=64), nullable=True),
+    sa.Column('challenged_filter', sa.String(length=64), nullable=True),
     sa.Column('image_id', sa.Integer(), nullable=True),
     sa.Column('challenge_accepted', sa.Boolean(), nullable=True),
     sa.Column('challenger_finished', sa.Boolean(), nullable=True),

@@ -99,10 +99,19 @@ class Battle(db.Model):
             User.query.filter_by(id=self.challenged_id).first().username)
 
 
+EXP_LIMITS = [
+        ('Novice', 0),
+        ('Apprentice', 10),
+        ('Adept', 50),
+        ('Expert', 250),
+        ('Master', 1000)
+    ]
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    experience = db.Column(db.Integer, default=0)
     username = db.Column(db.String(64), unique=True, index=True)
     name = db.Column(db.String(64))
     email = db.Column(db.String(120), unique=True, index=True)
@@ -232,8 +241,26 @@ class User(UserMixin, db.Model):
         else:
             v = Vote(battle=battle, voter=self, choice=choice)
             db.session.add(v)
+            self.experience += 10
+            db.session.add(self)
         db.session.commit()
         return self
+
+    def get_rank(self):
+        rank = EXP_LIMITS[0][0]
+        for name, exp in EXP_LIMITS:
+            if exp > self.experience:
+                return rank
+            rank = name
+        return EXP_LIMITS[-1][0]
+
+    def get_exp_pc(self):
+        rank_exp = EXP_LIMITS[0][0]
+        for name, exp in EXP_LIMITS:
+            if exp > self.experience:
+                return (self.experience - rank_exp)/(exp-rank_exp)*100
+            rank_exp = exp
+        return 100
 
     def can(self, permissions):
         return self.role and (self.role.permissions & permissions

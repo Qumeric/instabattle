@@ -66,7 +66,10 @@ def test(name=None, coverage=False):
 
 @manager.command
 def init():
-    """[Re]cretate database, deploy and create two sample users and an image"""
+    """
+    [Re]cretate database, deploy and create three sample users, an image
+    and some battles
+    """
     from flask_migrate import init, migrate
 
     call(["rm", "-rf", "data-dev.sqlite", "migrations"])
