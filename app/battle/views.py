@@ -17,17 +17,39 @@ def battles():
 @battle.route("/<int:id>", methods=('GET', 'POST'))
 @login_required
 def fight(id):
-    form = BattleForm()
+    filter = ""
     battle = Battle.query.get_or_404(id)
+    is_challenger = (battle.challenger_id == current_user.id)
+    is_challenged = (battle.challenged_id == current_user.id)
+    if is_challenger:
+        filter = battle.challenger_filter
+    elif is_challenged:
+        filter = battle.challenged_filter
+    form = BattleForm(filter = filter)
+
     if not battle.challenge_accepted:
         flash("This battle isn't accepted yet")
         return redirect(url_for('.battles'))
     if form.validate_on_submit():
-        raise NotImplementedError
+        filter = form.filter.data
+        print('Filter:', filter)
+        if is_challenger:
+            battle.challenger_filter = filter
+            battle.challenger_finished = True
+        elif is_challenged:
+            battle.challenged_filter = filter
+            battle.challenged_finished = True
+        else:
+            flash("Unknown user")
+            return redirect(url_for('.battles'))
+        db.session.add(battle)
+        db.session.commit()
+
     return render_template("battles/battle.html",
                            battle=battle,
                            form=form,
-                           filters=filters)
+                           filter=filter
+                           )
 
 
 @battle.route("/vote/<int:battle_id>/<choice>")

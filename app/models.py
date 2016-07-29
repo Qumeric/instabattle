@@ -67,6 +67,8 @@ class Battle(db.Model):
     challenged_id = db.Column(db.Integer,
                               db.ForeignKey('users.id'),
                               index=True)
+    challenger_filter = db.Column(db.String(64))
+    challenged_filter = db.Column(db.String(64))
     image_id = db.Column(db.Integer, db.ForeignKey('images.id'), index=True)
     challenge_accepted = db.Column(db.Boolean, default=False)
     challenger_finished = db.Column(db.Boolean, default=False)

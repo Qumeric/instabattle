@@ -4,20 +4,15 @@
 {% block title %}Battle #{{ battle.id }}{% endblock %}
 
 {% block page_content %}
-<figure id="{{ battle.image.name }}">
+<figure id="image" class={{ filter }}>
   <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}" style="width: 100%">
 </figure>
 
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose a filter
-    <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    {% for n, f in filters %}
-    <li><button onclick='$("#{{ battle.image.name }}").attr("class", "{{ f }}");'>{{ n }}</button></li>
-    {% endfor %}
-  </ul>
-</div>
-
 {{ wtf.quick_form(form) }}
 
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/static/battle.js"></script>
 {% endblock %}
