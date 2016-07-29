@@ -1,0 +1,26 @@
+<li class="jumbotron">
+  <p class="lead text-center">{{ moment(battle.timestamp).fromNow() }}</p>
+  <div class="row">
+    <div class="col-md-4">
+      <a href="{{ url_for('main.user', username=battle.challenger.username) }}">
+        <img class="img-rounded" src="{{ battle.challenger.gravatar(size=100) }}">
+      </a>
+    </div>
+    <div class="col-md-4">
+      <figure>
+        <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
+      </figure>
+    </div>
+    <div class="col-md-4">
+      <a href="{{ url_for('main.user', username=battle.challenged.username) }}">
+        <img class="img-rounded" src="{{ battle.challenged.gravatar(size=100) }}">
+      </a>
+    </div>
+  </div>
+  {% if battle.challenged_id == current_user.id %}
+  <a href="{{ url_for('battle.decide', id=battle.id, is_accepted=True) }}"
+    class="btn btn-primary">Accept</a>
+  <a href="{{ url_for('battle.decide', id=battle.id, is_accepted=False) }}"
+    class="btn btn-default">Decline</a>
+  {% endif %}
+</li>

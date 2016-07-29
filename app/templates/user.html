@@ -18,5 +18,9 @@
   </div>
 </div>
 <h3>Battles with {{ user.username }}</h3>
-{% include '_battles.html' %}
+  <ul class="battles">
+    {% for battle in battles %}
+      {% include '_battle.html' %}
+    {% endfor %}
+  </ul>
 {% endblock %}

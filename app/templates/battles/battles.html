@@ -4,5 +4,9 @@
 
 {% block page_content %}
   <h1>Total battles: {{ battles|count }}</h1>
-  {% include '_battles.html' %}
+  <ul class="battles">
+    {% for battle in battles %}
+      {% include '_battle.html' %}
+    {% endfor %}
+  </ul>
 {% endblock %}
