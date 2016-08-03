@@ -1,13 +1,20 @@
-from flask import request, jsonify
+from flask import request, jsonify, g
 from ..schemas import user_schema, image_schema
 from . import api
 from flask_login import login_required
 from ..decorators import permission_required
 from ..models import Permission, Image, User
+from .authentication import auth
 
+
+@api.route("/users/self", methods=['GET'])
+@auth.login_required
+def self():
+    if g.current_user.is_anonymous:
+        return jsonify({'id': 0, 'usename': 'anonmymous'})
+    return user_schema.jsonify(g.current_user), 200
 
 @api.route("/upload", methods=['POST'])
-@login_required
 @permission_required(Permission.SUGGEST)
 def upload():
     json_data = request.get_json()
@@ -19,7 +26,7 @@ def upload():
     raise NotImplementedError
 
 
-@api.route("/user/<int:id>")
+@api.route("/users/<int:id>")
 def user(id):
     user = User.query.get_or_404(id)
     return user_schema.jsonify(user), 200
