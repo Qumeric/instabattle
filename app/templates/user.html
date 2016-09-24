@@ -3,30 +3,35 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-  <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
-  <div class="profile-header">
-    <h1>{{ user.username }}</h1>
-    {% if user.name %}<p>{{ user.name }}</p>{% endif %}
-    {% if current_user.is_administrator() %}
-    <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-    {% endif %}
-    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-    <p>Member since {{ moment(user.member_since).format('L') }}.
-    Last seen {{ moment(user.last_seen).fromNow() }}.</p>
-    <p>{{ user.battles.count() }} battles.</p>
-    <p>Experience: 
-    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ user.get_exp_pc() }}"
-                aria-valuemin="0" aria-valuemax="100" style="min-width:5em; width:{{ user.get_exp_pc() }};%">
-      {{ user.get_rank() }} ({{ user.get_exp_pc() }} %)
-      </div>
-  </div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="page-header">
+            <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
+            <div class="profile-header">
+                <h1>{{ user.username }}</h1>
+                {% if user.name %}<p>{{ user.name }}</p>{% endif %}
+                {% if current_user.is_administrator() %}
+                <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                {% endif %}
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                <p>Member since {{ moment(user.member_since).format('L') }}.
+                Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+                <p>{{ user.battles.count() }} battles.</p>
+                <p>Experience:
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ user.get_exp_pc() }}"
+                                                                                  aria-valuemin="0" aria-valuemax="100" style="min-width:5em; width:{{ user.get_exp_pc() }};%">
+                    {{ user.get_rank() }} ({{ user.get_exp_pc() }} %)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h3>Battles with {{ user.username }}</h3>
+        <div class="battles">
+            {% for battle in battles %}
+            {% include '_battle.html' %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
-<br />
-<h3>Battles with {{ user.username }}</h3>
-  <ul class="battles">
-    {% for battle in battles %}
-      {% include '_battle.html' %}
-    {% endfor %}
-  </ul>
 {% endblock %}

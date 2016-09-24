@@ -1,19 +1,17 @@
-<li class="jumbotron">
+<div class="jumbotron">
   <p class="lead text-center">
   <a href="{{ url_for('battle.fight', id=battle.id) }}">
       {{ moment(battle.timestamp).fromNow() }}
     </a>
   </p>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <a href="{{ url_for('main.user', username=battle.challenger.username) }}">
         <img class="img-rounded pull-left" src="{{ battle.challenger.gravatar(size=100) }}">
       </a>
       <p>Votes for challenger: {{ battle.votes.filter_by(choice="challenger").count() }}</p>
     </div>
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <a href="{{ url_for('main.user', username=battle.challenged.username) }}">
         <img class="img-rounded pull-right" src="{{ battle.challenged.gravatar(size=100) }}">
       </a>
@@ -22,7 +20,7 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <figure class={{ battle.challenger_filter }}>
+      <figure class="{{ battle.challenger_filter }} pull-left">
         <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
       </figure>
       {% if current_user.can(Permission.VOTE) and current_user.id not in (battle.challenger.id, battle.challenged.id) %}
@@ -32,7 +30,7 @@
       {% endif %}
     </div>
     <div class="col-md-6">
-      <figure class={{ battle.challenged_filter }}>
+      <figure class="{{ battle.challenged_filter }} pull-right">
         <img class="img-responsive" src="{{ '/static/images/' + battle.image.name }}">
       </figure>
       {% if current_user.can(Permission.VOTE) and current_user.id not in (battle.challenger.id, battle.challenged.id) %}
@@ -42,4 +40,4 @@
       {% endif %}
     </div>
   </div>
-</li>
+</div>
