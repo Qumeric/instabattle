@@ -91,12 +91,14 @@ def init():
                   email='cc@cc.cc',
                   password='123',
                   confirmed=True)
-    lenna = Image(name='lenna', user=user_a)
+    lenna = Image(name='lenna.png', user=user_a)
+    ducklings = Image(name='ducklings.jpg', user=user_b)
+    flower = Image(name='flower.jpg', user=user_c)
     battle1 = user_a.challenge(user_b, lenna)
     battle1.challenge_accepted = True
     user_c.vote(battle1, "challenger")
-    battle2 = user_a.challenge(user_b, lenna)
-    battle3 = user_c.challenge(user_a, lenna)
+    battle2 = user_a.challenge(user_b, ducklings)
+    battle3 = user_c.challenge(user_a, flower)
 
     db.session.add(user_a)
     db.session.add(user_b)
