@@ -11,12 +11,13 @@ from app import create_app, db
 from app.models import User, Role, Image, Permission, Battle, Vote
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from flask_moment import Moment
+from whitenoise import WhiteNoise
 
 app = create_app(os.environ.get('FLASK_CONFIG'))
 manager = Manager(app)
-moment = Moment(app)
 migrate = Migrate(app, db)
+# Does it works?!
+app = WhiteNoise(app, root='app/static')
 
 
 def make_shell_context():
